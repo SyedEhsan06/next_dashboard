@@ -12,8 +12,8 @@ const Navbar = () => {
   }
 
   return (
-    <header className="p-4 bg-[#182237] rounded-lg">
-      <div className="navbar flex justify-between items-center p-4 ">
+    <header className="p-1 bg-[#182237] rounded-lg">
+      <div className="navbar flex justify-between items-center p-2 ">
         <div className="flex items-center">
           <img
             src="https://cdn-icons-png.freepik.com/512/5198/5198081.png"
@@ -32,10 +32,10 @@ const Navbar = () => {
           }
         />
         <div className="flex items-center space-x-4">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300">
+          <button className="bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600 transition duration-300">
             Profile
           </button>
-          <button className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300">
+          <button className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600 transition duration-300">
             Logout
           </button>
         </div>

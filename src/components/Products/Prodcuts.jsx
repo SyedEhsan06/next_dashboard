@@ -2,7 +2,7 @@
 import { deleteProduct } from "@/lib/actions";
 import { getProducts } from "@/lib/data";
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
 import { FaSearch } from "react-icons/fa";
 import Search from "../Search";
 import Pagination from "../Pagination";
@@ -11,78 +11,7 @@ const Products = async ({ searchParams }) => {
   let params = searchParams?.searchParams;
   let page = params?.page || 1;
   let q = params?.q || "";
-  console.log(page, q);
   const { products, count } = await getProducts(q, page);
-
-  console.log(products);
-  // const products = [
-  //   {
-  //     id: 1,
-  //     image: "https://via.placeholder.com/50",
-  //     title: "Jam",
-  //     category: "Food",
-  //     subcategory: "Packaged",
-  //     price: "$2.00",
-  //     stock: 100,
-  //     sold: 50,
-  //     createdAt: "2023-01-01",
-  //   },
-  //   {
-  //     id: 2,
-  //     image: "https://via.placeholder.com/50",
-  //     title: "Bread",
-  //     category: "Food",
-  //     subcategory: "Bakery",
-  //     price: "$3.00",
-  //     stock: 200,
-  //     sold: 100,
-  //     createdAt: "2023-01-02",
-  //   },
-  //   {
-  //     id: 3,
-  //     image: "https://via.placeholder.com/50",
-  //     title: "Milk",
-  //     category: "Food",
-  //     subcategory: "Dairy",
-  //     price: "$4.00",
-  //     stock: 300,
-  //     sold: 150,
-  //     createdAt: "2023-01-03",
-  //   },
-  //   {
-  //     id: 4,
-  //     image: "https://via.placeholder.com/50",
-  //     title: "Butter",
-  //     category: "Food",
-  //     subcategory: "Dairy",
-  //     price: "$5.00",
-  //     stock: 400,
-  //     sold: 200,
-  //     createdAt: "2023-01-04",
-  //   },
-  //   {
-  //     id: 5,
-  //     image: "https://via.placeholder.com/50",
-  //     title: "Cheese",
-  //     category: "Food",
-  //     subcategory: "Dairy",
-  //     price: "$6.00",
-  //     stock: 500,
-  //     sold: 250,
-  //     createdAt: "2023-01-05",
-  //   },
-  // ];
-
-  const handleView = (id) => {
-    console.log(`View product with id ${id}`);
-    // Add your view logic here
-  };
-
-  const handleDelete = (id) => {
-    console.log(`Delete product with id ${id}`);
-    // Add your delete logic here
-  };
-
   return (
     <>
       <div className="container flex flex-col p-4 bg-[#182237] justify-around w-full h-[80vh] text-white">
@@ -106,7 +35,9 @@ const Products = async ({ searchParams }) => {
               />
             </div>
           </div> */}
-          <Search placeholder="Search Products" />
+          <Suspense>
+            <Search placeholder="Search Products" />
+          </Suspense>
           <div className="actions flex align-center">
             <Link href="/products/add">
               <button
@@ -191,7 +122,9 @@ const Products = async ({ searchParams }) => {
                 </tbody>
               </table>
             </div>
-            <Pagination count={count} />
+            <Suspense>
+              <Pagination count={count} />
+            </Suspense>
           </>
         ) : (
           <div className="flex justify-center items-center h-[60vh]">

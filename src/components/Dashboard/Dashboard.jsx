@@ -15,7 +15,6 @@ const Dashboard = async () => {
     const usersCount = y.count || 0;
     const users = y.users || [];
 
-    console.log(products, productsCount, users, usersCount);
 
     const stock = products.reduce((acc, product) => acc + product.quantity, 0);
     const revenue = products

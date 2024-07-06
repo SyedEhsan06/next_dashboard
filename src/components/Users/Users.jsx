@@ -1,7 +1,7 @@
 import { deleteUser } from "@/lib/actions";
 import { getUsers } from "@/lib/data";
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
 import { FaSearch } from "react-icons/fa";
 import Search from "../Search";
 import Pagination from "../Pagination";
@@ -23,7 +23,8 @@ const Users = async (
     <>
       <div className="container flex flex-col p-4 bg-[#182237] justify-around w-full h-[80vh]  text-white">
         <div className="top nav flex justify-between align-center">
-         <Search placeholder="Search Users" />
+       <Suspense>  <Search placeholder="Search Users" />
+        </Suspense>
           <div className="actions flex align-center">
             <Link href="/users/add" passHref>
               <button
@@ -110,7 +111,7 @@ const Users = async (
             </tbody>
           </table>
         </div>
-       <Pagination count={count} />
+      <Suspense> <Pagination count={count} /></Suspense>
        </>
         ) :  (
           <div className="flex justify-center items-center h-[60vh]">
