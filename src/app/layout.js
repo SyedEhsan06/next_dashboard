@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar/Sidebar/Sidebar";
+import Navbar from "@/components/Navbar/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,9 +19,7 @@ export default function RootLayout({ children }) {
             <Sidebar/>
           </aside>
           <main className="flex-1 m-4 flex flex-col gap-4">
-            <header className="p-4 bg-[#182237] rounded-lg">
-              Navbar
-            </header>
+             <Navbar/>
             <div className="p-4 flex-grow bg-[#182237] rounded-lg">
               {children}
             </div>

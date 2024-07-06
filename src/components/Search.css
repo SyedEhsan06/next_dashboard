@@ -1,0 +1,25 @@
+input[type="text"]::-webkit-input-placeholder {
+  color: #838383;
+}
+input[type="text"]::-moz-placeholder {
+  color: #838383;
+}
+input[type="text"]:-ms-input-placeholder {
+  color: #838383;
+}
+input[type="text"]:-moz-placeholder {
+  color: #838383;
+}
+input[type="text"]:active {
+  border: none;
+}
+input[type="text"]::-webkit-search-decoration,
+input[type="text"]::-webkit-search-cancel-button,
+input[type="text"]::-webkit-search-results-button,
+input[type="text"]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+}
+
+input[type="text"]{
+    outline: none;
+}

@@ -1,9 +1,9 @@
-"use client"
+"use client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { FaSearch } from "react-icons/fa";
 import { useDebouncedCallback } from "use-debounce";
-
+import "./Search.css";
 const Search = ({ placeholder }) => {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
@@ -34,7 +34,9 @@ const Search = ({ placeholder }) => {
           <FaSearch />
           <input
             type="text"
-            className="bg-[#253148] ml-2 rounded-lg text-white border-none"
+            className="bg-[#253148] ml-2 rounded-lg text-white border-none
+            
+            "
             placeholder={placeholder}
             onChange={handleSearch}
           />
