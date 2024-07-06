@@ -1,10 +1,10 @@
 import Users from '@/components/Users/Users'
 import React from 'react'
 
-const page = () => {
+const page = (params) => {
   return (
     <>
-    <Users />
+    <Users searchParams={params}/>
     </>
   )
 }

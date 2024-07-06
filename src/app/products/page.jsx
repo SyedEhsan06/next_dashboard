@@ -1,10 +1,12 @@
 import Products from '@/components/Products/Prodcuts'
 import React from 'react'
 
-const page = () => {
+const page = (params) => {
   return (
     <>
-        <Products />
+        <Products 
+        searchParams={params}
+        />
     </>
   )
 }

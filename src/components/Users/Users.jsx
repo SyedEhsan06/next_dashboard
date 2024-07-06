@@ -3,92 +3,28 @@ import { getUsers } from "@/lib/data";
 import Link from "next/link";
 import React from "react";
 import { FaSearch } from "react-icons/fa";
+import Search from "../Search";
+import Pagination from "../Pagination";
 
-const Users = async () => {
-  const { users, count } = await getUsers();
-  console.log(users);
+const Users = async (
+  {
+    searchParams
+  }
+) => {
+  let params = searchParams?.searchParams;
+  let page = params?.page || 1;
+  let q = params?.q || "";
+  console.log(page, q);
+  const { users, count } = await getUsers(
+    q,page
+  );
   let data = users[0]?.createdAt;
-  // const users = [
-  //   {
-  //     id: 1,
-  //     icon: "https://i.pinimg.com/236x/31/58/31/31583193f57c8b2448d7d4ddb1f5122a.jpg",
-  //     name: "wolf",
-  //     email: "wolf@jungle.com",
-  //     role: "admin",
-  //     status: "active",
-  //     createdAt: "2021-09-01",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "lion",
-  //     icon: "https://letsenhance.io/static/66c1b6abf8f7cf44c19185254d7adb0c/28ebd/AiArtBefore.jpg",
-  //     email: "lion@jungle.com",
-  //     role: "user",
-  //     status: "inactive",
-  //     createdAt: "2021-09-02",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "tiger",
-  //     icon: null,
-  //     email: "tiger@jungle.com",
-  //     role: "admin",
-  //     status: "active",
-  //     createdAt: "2021-09-03",
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "leopard",
-  //     icon: null,
-  //     email: "leopard@jungle.com",
-  //     role: "user",
-  //     status: "inactive",
-  //     createdAt: "2021-09-04",
-  //   },
-  //   {
-  //     id: 5,
-  //     name: "penguin",
-  //     icon: null,
-  //     email: "penguin@penguin.com",
-  //     role: "admin",
-  //     status: "active",
-  //     createdAt: "2021-09-05",
-  //   },
-  // ];
-
-  const handleEdit = (id) => {
-    console.log(`Edit user with id ${id}`);
-    // Add your edit logic here
-  };
-
-  const handleDelete = (id) => {
-    console.log(`Delete user with id ${id}`);
-    // Add your delete logic here
-  };
-
+ 
   return (
     <>
       <div className="container flex flex-col p-4 bg-[#182237] justify-around w-full h-[80vh]  text-white">
         <div className="top nav flex justify-between align-center">
-          <div
-            className="search
-            bg-[#253148]
-            flex
-            justify-between
-            rounded-lg
-            text-white
-            border-none
-            p-2"
-          >
-            <div className="search-bar flex align-center items-center">
-              <FaSearch />
-              <input
-                type="text"
-                className="bg-[#253148] ml-2 rounded-lg text-white border-none"
-                placeholder="Search Users"
-              />
-            </div>
-          </div>
+         <Search placeholder="Search Users" />
           <div className="actions flex align-center">
             <Link href="/users/add" passHref>
               <button
@@ -175,17 +111,11 @@ const Users = async () => {
             </tbody>
           </table>
         </div>
-        <div className="bottom pagination mt-4 flex justify-between">
-          <button className="bg-[#a9b9d6] text-gray-800 w-28 h-10 p-2 mr-2">
-            Previous
-          </button>
-          <button className="bg-[#a9b9d6] text-gray-800 w-25 h-10 p-2">
-            Next
-          </button>
-        </div></>
-        ) : (
-          <div className="text-center text-white">
-            <h1>No users found</h1>
+       <Pagination count={count} />
+       </>
+        ) :  (
+          <div className="flex justify-center items-center h-[60vh]">
+            <h1>No User found</h1>
           </div>
         )
       }

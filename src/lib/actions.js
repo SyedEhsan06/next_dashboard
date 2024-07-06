@@ -18,6 +18,16 @@ export const addUser = async (formData) => {
     console.error("User already exists:", userExists);
     return { error: "User already exists" };
   }
+  //image upload
+  const file = formData.get("file");
+  const uploadsDir = path.join(process.cwd(), "public", "uploads", "images");
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+  const filePath = path.join(uploadsDir, file.name);
+  const fileUrl = `/uploads/images/${file.name}`;
+  fs.writeFileSync(filePath, Buffer.from(await file.arrayBuffer()));
+  console.log("File saved successfully:", filePath);
 
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(formData.get("password"), salt);
@@ -31,7 +41,7 @@ export const addUser = async (formData) => {
     phone: formData.get("phone"),
     role: formData.get("role"),
     status: formData.get("status"),
-    image: formData.get("file").name,
+    image: fileUrl,
     address: [
       {
         address: formData.get("address"),

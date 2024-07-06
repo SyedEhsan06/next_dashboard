@@ -4,23 +4,59 @@ import Product from "@/schemas/Products.schema";
 import { connectToDb } from "./DbConnect";
 
 
-export const getProducts = async () => {
+export const getProducts = async (q,page) => {
   await connectToDb();
+  const regex = new RegExp(q, "i");
+  const itemsPerPage = 4;
     try {
-        const products = await Product.find({}).lean();
-        const count = await Product.countDocuments();
+    
+        const products = await Product.find({
+            $or: [
+                { name: { $regex: regex } },
+                { category: { $regex: regex } },
+                { subcategory: { $regex: regex } },
+                { product_id: { $regex: regex } },
+            ],
+        }).lean()
+        .skip((page - 1) * itemsPerPage)
+        .limit(itemsPerPage);
         
+        const count = await Product.find({$or: [
+            { name: { $regex: regex } },
+            { category: { $regex: regex } },
+            { subcategory: { $regex: regex } },
+            { product_id: { $regex: regex } },
+        ],
+    }).count()
+
         return { products, count };
     }
     catch (error) {
         console.error("Error getting products:", error);
     }
 };
-export const getUsers = async () => {
+export const getUsers = async (q,page) => {
     await connectToDb();
+    const regex = new RegExp(q, "i");
+    const itemsPerPage = 4;
         try {
-            const users = await User.find({}).lean();
-            const count = await User.countDocuments();
+            const users = await User.find({
+                $or: [
+                    { firstName: { $regex: regex } },
+                    { lastName: { $regex: regex } },
+                    { email: { $regex: regex } },
+                ],
+            }).lean().skip((page - 1) * itemsPerPage).limit(itemsPerPage)
+            const count = await User.find({
+                $or: [
+                    { firstName: { $regex: regex } },
+                    { lastName: { $regex: regex } },
+                    { email: { $regex: regex } },
+                    { phone: { $regex: regex } },   
+                    {status : { $regex: regex } },
+                    {role : { $regex: regex } },
+                ],
+            }).count();
             return { users, count };
         }
         catch (error) {
