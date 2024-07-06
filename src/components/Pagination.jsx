@@ -1,6 +1,6 @@
 "use client"
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 
 const Pagination = ({ count }) => {
   const searchParams = useSearchParams();
@@ -22,26 +22,26 @@ const Pagination = ({ count }) => {
   };
   
   return (
-    <div className="bottom pagination mt-4 flex justify-between">
-      <button
-        onClick={() => handleChangePage("prev")}
-        disabled={!hasPrevious}
-        className={`w-28 h-10 p-2 mr-2 rounded-md shadow-md transition-all duration-300
-          ${hasPrevious ? 'bg-blue-500 hover:bg-blue-600 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}
-        `}
-      >
-        Previous
-      </button>
-      <button
-        onClick={() => handleChangePage("next")}
-        disabled={!hasNext}
-        className={`w-28 h-10 p-2 rounded-md shadow-md transition-all duration-300
-          ${hasNext ? 'bg-blue-500 hover:bg-blue-600 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}
-        `}
-      >
-        Next
-      </button>
-    </div>
+  <Suspense>  <div className="bottom pagination mt-4 flex justify-between">
+  <button
+    onClick={() => handleChangePage("prev")}
+    disabled={!hasPrevious}
+    className={`w-28 h-10 p-2 mr-2 rounded-md shadow-md transition-all duration-300
+      ${hasPrevious ? 'bg-blue-500 hover:bg-blue-600 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}
+    `}
+  >
+    Previous
+  </button>
+  <button
+    onClick={() => handleChangePage("next")}
+    disabled={!hasNext}
+    className={`w-28 h-10 p-2 rounded-md shadow-md transition-all duration-300
+      ${hasNext ? 'bg-blue-500 hover:bg-blue-600 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}
+    `}
+  >
+    Next
+  </button>
+</div></Suspense>
   );
 };
 

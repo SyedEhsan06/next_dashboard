@@ -2,7 +2,7 @@
 import { deleteProduct } from "@/lib/actions";
 import { getProducts } from "@/lib/data";
 import Link from "next/link";
-import React, { Suspense } from "react";
+import React from "react";
 import { FaSearch } from "react-icons/fa";
 import Search from "../Search";
 import Pagination from "../Pagination";
@@ -11,7 +11,10 @@ const Products = async ({ searchParams }) => {
   let params = searchParams?.searchParams;
   let page = params?.page || 1;
   let q = params?.q || "";
+  console.log(page, q);
   const { products, count } = await getProducts(q, page);
+
+
   return (
     <>
       <div className="container flex flex-col p-4 bg-[#182237] justify-around w-full h-[80vh] text-white">
@@ -35,9 +38,7 @@ const Products = async ({ searchParams }) => {
               />
             </div>
           </div> */}
-          <Suspense>
             <Search placeholder="Search Products" />
-          </Suspense>
           <div className="actions flex align-center">
             <Link href="/products/add">
               <button
@@ -122,9 +123,7 @@ const Products = async ({ searchParams }) => {
                 </tbody>
               </table>
             </div>
-            <Suspense>
               <Pagination count={count} />
-            </Suspense>
           </>
         ) : (
           <div className="flex justify-center items-center h-[60vh]">

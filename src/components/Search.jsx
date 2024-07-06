@@ -1,6 +1,6 @@
 "use client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useDebouncedCallback } from "use-debounce";
 import "./Search.css";
@@ -20,7 +20,7 @@ const Search = ({ placeholder }) => {
   }, 300);
   return (
     <>
-      <div
+      <Suspense><div
         className="search
     bg-[#253148]
     flex
@@ -42,6 +42,7 @@ const Search = ({ placeholder }) => {
           />
         </div>
       </div>
+      </Suspense>
     </>
   );
 };
