@@ -6,7 +6,6 @@ import { FaArrowCircleLeft } from "react-icons/fa";
 
 const ViewProduct = async ({ id }) => {
   const product = await getProductById(id);
-console.log(product)
   if (!product) {   
     return <div>Loading...</div>;
   }

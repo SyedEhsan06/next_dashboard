@@ -14,7 +14,6 @@ const Users = async (
   let params = searchParams?.searchParams;
   let page = params?.page || 1;
   let q = params?.q || "";
-  console.log(page, q);
   const { users, count } = await getUsers(
     q,page
   );

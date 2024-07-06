@@ -212,6 +212,7 @@ export const addProduct = async (formData) => {
   } else {
     const newProduct = new Product({
       name: formData.get("name"),
+      product_id: formData.get("product_id"),
       price: formData.get("price"),
       quantity: formData.get("quantity"),
       sold: 0,
