@@ -79,7 +79,7 @@ const Sidebar = () => {
           <Link href={item.link} key={index} passHref>
             <p
               className={`flex items-center p-2 rounded-lg transition ${
-                pathname === item.link
+                pathname === item.link || pathname.includes(item.link)
                   ? "bg-[#151c2c] text-white border-l-4 border-blue-900"
                   : "text-gray-300 hover:bg-[#151c2c] hover:text-white"
               } ${

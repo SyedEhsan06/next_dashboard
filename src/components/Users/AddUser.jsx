@@ -2,8 +2,11 @@ import { addUser } from "@/lib/actions";
 import Link from "next/link";
 import React from "react";
 import { FaArrowCircleLeft, FaBackward } from "react-icons/fa";
+import { SubmitButton } from "../SubmitButton";
 
 const AddUser = () => {
+  //on submit form
+  
   return (
     <>
       <div className="container mx-auto p-4">
@@ -146,17 +149,7 @@ const AddUser = () => {
                     placeholder="Upload Image"
                     className="input w-full bg-[#182237] p-2 border border-gray-500 rounded-lg text-white"
                   />
-                  <button
-                    type="submit"
-                    className="btn
-              active:bg-[#2c4065]
-              active:shadow-none
-              active:scale-95
-              focus:outline-none
-            bg-[#405d93] text-white rounded-lg w-32 h-10 p-2"
-                  >
-                    Add User
-                  </button>
+               <SubmitButton />
                 </div>
               </div>
             </form>

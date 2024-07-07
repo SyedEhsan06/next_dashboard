@@ -6,15 +6,18 @@ import React from "react";
 import { FaSearch } from "react-icons/fa";
 import Search from "../Search";
 import Pagination from "../Pagination";
+import { redirect } from "next/navigation";
 
 const Products = async ({ searchParams }) => {
   let params = searchParams?.searchParams;
   let page = params?.page || 1;
   let q = params?.q || "";
-  console.log(page, q);
   const { products, count } = await getProducts(q, page);
 
-
+  if(page > 1 && products.length === 0){
+    page = page - 1;
+     redirect(`/products?page=${page}`);
+   }
   return (
     <>
       <div className="container flex flex-col p-4 bg-[#182237] justify-around w-full h-[80vh] text-white">

@@ -7,9 +7,59 @@ import Product from "@/schemas/Products.schema";
 import bcrypt from "bcrypt";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-// import { CldImage } from "next-cloudinary";
+import { v2 as cloudinary } from "cloudinary";
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Function to upload image to Cloudinary
+const uploadImagetoCloudinary = async (filePath) => {
+  try {
+    const result = await cloudinary.uploader.upload(filePath, {
+      upload_preset: "ml_default",
+    });
+    return result.url;
+  } catch (error) {
+    console.error("Error uploading to Cloudinary:", error);
+    throw error;
+  }
+};
+
+// Function to handle image upload process
+const handleImageUpload = async (file) => {
+  if (!file) {
+    console.error("No file found in formData");
+    throw new Error("No file provided");
+  }
+
+  // Saving the file temporarily to upload to Cloudinary
+  const uploadsDir = path.join(process.cwd(), "uploads");
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+
+  const tempFilePath = path.join(uploadsDir, file.name);
+  const arrayBuffer = await file.arrayBuffer();
+  fs.writeFileSync(tempFilePath, Buffer.from(arrayBuffer));
+
+  // Upload the image to Cloudinary
+  let fileUrl;
+  try {
+    fileUrl = await uploadImagetoCloudinary(tempFilePath);
+  } catch (error) {
+    console.error("Failed to upload image to Cloudinary:", error);
+    throw new Error("Failed to upload image");
+  } finally {
+    // Clean up the temporary file
+    fs.unlinkSync(tempFilePath);
+  }
+
+  return fileUrl;
+};
+
 // Add User
-//
 export const addUser = async (formData) => {
   await connectToDb();
 
@@ -18,20 +68,11 @@ export const addUser = async (formData) => {
     console.error("User already exists:", userExists);
     return { error: "User already exists" };
   }
-  //image upload
-  const file = formData.get("file");
-  const uploadsDir = path.join(process.cwd(), "public", "uploads", "images");
-  if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-  }
-  const filePath = path.join(uploadsDir, file.name);
-  const fileUrl = `/uploads/images/${file.name}`;
-  fs.writeFileSync(filePath, Buffer.from(await file.arrayBuffer()));
-  console.log("File saved successfully:", filePath);
+
+  const fileUrl = await handleImageUpload(formData.get("file"));
 
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(formData.get("password"), salt);
-  console.log("Hashed Password:", hashedPassword);
 
   const newUser = new User({
     firstName: formData.get("first_name"),
@@ -57,7 +98,6 @@ export const addUser = async (formData) => {
 
   try {
     await newUser.save();
-    console.log("User added successfully:", newUser);
   } catch (error) {
     console.error("Error adding user:", error);
   }
@@ -66,8 +106,7 @@ export const addUser = async (formData) => {
   redirect("/users");
 };
 
-// delete user
-
+// Delete User
 export const deleteUser = async (formData) => {
   const { id } = Object.fromEntries(formData);
 
@@ -79,28 +118,28 @@ export const deleteUser = async (formData) => {
     throw new Error("Failed to delete user!");
   }
 
-  revalidatePath("/dashboard/products");
+  revalidatePath("/users");
 };
 
 // Update User
 export const updateUser = async (formData) => {
   const { id } = Object.fromEntries(formData);
-  const user = await User.findById({
-    _id: id,
-  });
-  console.log(formData);
+  const user = await User.findById(id);
   if (!user) {
     console.error("User not found");
     return { error: "User not found" };
   }
-  let update = {
+
+  const fileUrl = await handleImageUpload(formData.get("image"));
+
+  const update = {
     firstName: formData.get("firstName"),
     lastName: formData.get("lastName"),
     email: formData.get("email"),
     phone: formData.get("phone"),
     role: formData.get("role"),
     status: formData.get("status"),
-    image: formData.get("image").name,
+    image: fileUrl,
     address: [
       {
         address: formData.get("address"),
@@ -112,64 +151,17 @@ export const updateUser = async (formData) => {
       },
     ],
   };
+
   try {
     await User.findByIdAndUpdate(id, update);
-    console.log("User updated successfully:", user);
   } catch (error) {
     console.error("Error updating user:", error);
   }
+
   revalidatePath("/users");
   redirect("/users");
 };
-// Add Product
-// export const addProduct = async (formData) => {
 
-//   await connectToDb();
-
-//   const productExists = await Product.findOne({ product_id: formData.get("product_id") });
-//   if (productExists) {
-//     let update = {
-//       quantity: productExists.quantity + parseInt(formData.get("quantity")),
-//       price: formData.get("price"),
-//       sold: productExists.sold,
-//       category: formData.get("category"),
-//       subcategory: formData.get("subcategory"),
-//       description: formData.get("description"),
-//       image: formData.get("file").name,
-//       stockStatus: formData.get("stockStatus"),
-//     };
-//     try {
-//         // console.log("Product Exists:", productExists);
-//         //uploding image to cloudinary
-//         const file = formData.get("file");
-
-//       await Product.findByIdAndUpdate(productExists.id, update);
-//       console.log("Product updated successfully:", productExists);
-//     } catch (error) {
-//       console.error("Error updating product:", error);
-//     }
-//   } else {
-//     const newProduct = new Product({
-//       name: formData.get("name"),
-//       price: formData.get("price"),
-//       quantity: formData.get("quantity"),
-//       sold: 0,
-//       category: formData.get("category"),
-//       subcategory: formData.get("subcategory"),
-//       description: formData.get("description"),
-//       image: formData.get("file").name,
-//       stockStatus: formData.get("stockStatus"),
-//     });
-//     try {
-//       await newProduct.save();
-//       console.log("Product added successfully:", newProduct);
-//     } catch (error) {
-//       console.error("Error adding product:", error);
-//     }
-//   }
-//   revalidatePath("/products");
-//   redirect("/products");
-// };
 // Add Product
 export const addProduct = async (formData) => {
   await connectToDb();
@@ -177,23 +169,11 @@ export const addProduct = async (formData) => {
   const productExists = await Product.findOne({
     product_id: formData.get("product_id"),
   });
-  const file = formData.get("file");
 
-  // Save the file to the public directory
-  const uploadsDir = path.join(process.cwd(), "public", "uploads", "images");
-  if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-  }
+  const fileUrl = await handleImageUpload(formData.get("file"));
 
-  // Save the file to the public directory
-  const filePath = path.join(uploadsDir, file.name);
-  const fileUrl = `/uploads/images/${file.name}`;
-
-  fs.writeFileSync(filePath, Buffer.from(await file.arrayBuffer()));
-  console.log("File saved successfully:", filePath);
-  console.log("File URL:", fileUrl);
   if (productExists) {
-    let update = {
+    const update = {
       quantity: productExists.quantity + parseInt(formData.get("quantity")),
       price: formData.get("price"),
       sold: productExists.sold,
@@ -205,7 +185,6 @@ export const addProduct = async (formData) => {
     };
     try {
       await Product.findByIdAndUpdate(productExists.id, update);
-      console.log("Product updated successfully:", productExists);
     } catch (error) {
       console.error("Error updating product:", error);
     }
@@ -224,7 +203,6 @@ export const addProduct = async (formData) => {
     });
     try {
       await newProduct.save();
-      console.log("Product added successfully:", newProduct);
     } catch (error) {
       console.error("Error adding product:", error);
     }
@@ -240,9 +218,7 @@ export const deleteProduct = async (formData) => {
 
   try {
     connectToDb();
-    await Product.findByIdAndDelete({
-      _id: id,
-    });
+    await Product.findByIdAndDelete(id);
   } catch (err) {
     console.log(err);
     throw new Error("Failed to delete product!");
@@ -254,47 +230,32 @@ export const deleteProduct = async (formData) => {
 // Update Product
 export const updateProduct = async (formData) => {
   const { id } = Object.fromEntries(formData);
-  const product = await Product.findById({
-    _id: id,
-  });
-  console.log(formData);
+  const product = await Product.findById(id);
   if (!product) {
     console.error("Product not found");
     return { error: "Product not found" };
   }
-  //uploding image to cloudinary
-  // console
-  const file = formData.get("image");
-  const uploadsDir = path.join(process.cwd(), "public", "uploads", "images");
-  if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-  }
 
-  // Save the file to the public directory
-  const filePath = path.join(uploadsDir, file.name);
-  const fileUrl = `/uploads/images/${file.name}`;
+  const fileUrl = await handleImageUpload(formData.get("image"));
 
-  fs.writeFileSync(filePath, Buffer.from(await file.arrayBuffer()));
-
-  let update = {
+  const update = {
     name: formData.get("name"),
     price: formData.get("price"),
     quantity: formData.get("quantity"),
-    sold: formData?.get("sold") || product.sold,
+    sold: formData.get("sold") || product.sold,
     category: formData.get("category"),
     subcategory: formData.get("subcategory"),
     description: formData.get("description"),
     image: fileUrl,
     stockStatus: formData.get("stockStatus"),
   };
+
   try {
     await Product.findByIdAndUpdate(id, update);
-    console.log("Product updated successfully:", product);
   } catch (error) {
     console.error("Error updating product:", error);
   }
+
   revalidatePath("/products");
   redirect("/products");
 };
-
-// Update Product

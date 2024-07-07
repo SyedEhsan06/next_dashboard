@@ -71,7 +71,6 @@ export const getUserById = async (id) => {
         const user = await User.findById({
             _id: id,
         }).lean();
-        console.log("User:", user);
         return user;
     }
     catch (error) {
@@ -81,12 +80,10 @@ export const getUserById = async (id) => {
 //get product by id
 export const getProductById = async (id) => {
     await connectToDb();
-    console.log("ID:", id);
     try {
         const product = await Product.findById({
             _id: id,
         }).lean();
-        console.log("Product:", product);
         return product;
     }
     catch (error) {

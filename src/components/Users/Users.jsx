@@ -5,6 +5,7 @@ import React from "react";
 import { FaSearch } from "react-icons/fa";
 import Search from "../Search";
 import Pagination from "../Pagination";
+import { redirect } from "next/navigation";
 
 const Users = async (
   {
@@ -18,7 +19,10 @@ const Users = async (
     q,page
   );
   let data = users[0]?.createdAt;
- 
+ if(page > 1 && users.length === 0){
+   page = page - 1;
+    redirect(`/users?page=${page}`);
+  }
   return (
     <>
       <div className="container flex flex-col p-4 bg-[#182237] justify-around w-full h-[80vh]  text-white">

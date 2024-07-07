@@ -3,10 +3,11 @@ import { updateProduct } from "@/lib/actions";
 import Link from "next/link";
 import React from "react";
 import { FaArrowCircleLeft } from "react-icons/fa";
+import { SubmitButton } from "../SubmitButton";
 
 const ViewProduct = async ({ id }) => {
   const product = await getProductById(id);
-  if (!product) {   
+  if (!product) {
     return <div>Loading...</div>;
   }
 
@@ -101,20 +102,27 @@ const ViewProduct = async ({ id }) => {
                     defaultValue={product.description}
                   ></textarea>
                 </div>
-                <div className="flex flex-row bg-[#182237] gap-1 w-full justify-around">
+                <div className="flex flex-row bg-[#182237]  gap-1 w-full justify-around">
                   <input
                     type="file"
                     id="image"
                     name="image"
                     placeholder="Upload Image"
-                    className="input w-full bg-[#182237] p-2 border border-gray-500 rounded-lg text-white"
+                    className="input w-1/3 bg-[#182237] p-2 border border-gray-500 rounded-lg text-white"
                   />
-                  <button
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-1/3 "
+                  />
+
+                  {/* <button
                     type="submit"
-                    className="btn bg-[#405d93] text-white rounded-lg w-32 h-10 p-2 active:bg-[#2c4065] active:shadow-none active:scale-95 focus:outline-none"
+                    className="btn bg-[#405d93] text-white rounded-lg w-32 h-14 p-2 active:bg-[#2c4065] active:shadow-none active:scale-95 focus:outline-none"
                   >
                     Update Product
-                  </button>
+                  </button> */}
+                  <SubmitButton />
                 </div>
               </div>
             </form>

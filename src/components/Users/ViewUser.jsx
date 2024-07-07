@@ -1,6 +1,7 @@
 import { updateUser } from "@/lib/actions";
 import { getUserById } from "@/lib/data";
 import React from "react";
+import { SubmitButton } from "../SubmitButton";
 
 const ViewUser = async ({ id }) => {
   const user = await getUserById(id);
@@ -149,15 +150,10 @@ const ViewUser = async ({ id }) => {
                   id="image"
                   name="image"
                   placeholder="Image"
-                  className="input w-1/2 bg-[#182237] p-2 border border-gray-500 rounded-lg"
+                  className="input w-20 bg-[#182237] w-1/3 p-2 border border-gray-500 rounded-lg"
                 />
-              </div>
-              <div className="flex flex-row bg-[#182237] gap-1 w-full justify-around">
-                <input
-                  type="submit"
-                  value="Update"
-                  className="input w-full bg-[#182237] p-2 border border-gray-500 rounded-lg"
-                />
+                <img src={user.image} alt="user" className="w-1/3" />
+              <SubmitButton />
               </div>
             </div>
           </form>

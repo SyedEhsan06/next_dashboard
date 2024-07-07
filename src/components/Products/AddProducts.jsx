@@ -2,10 +2,10 @@ import { addProduct } from "@/lib/actions";
 import Link from "next/link";
 import React from "react";
 import { FaArrowCircleLeft } from "react-icons/fa";
+import { SubmitButton } from "../SubmitButton";
 // import { CldImage } from "next-cloudinary";
 const AddProduct = () => {
-    
-
+  // console.log(<SubmitButton />);
   return (
     <>
       <div className="container mx-auto p-4">
@@ -102,12 +102,7 @@ const AddProduct = () => {
                     placeholder="Upload Image"
                     className="input w-full bg-[#182237] p-2 border border-gray-500 rounded-lg text-white"
                   />
-                  <button
-                    type="submit"
-                    className="btn bg-[#405d93] text-white rounded-lg w-32 h-10 p-2 active:bg-[#2c4065] active:shadow-none active:scale-95 focus:outline-none"
-                  >
-                    Add Product
-                  </button>
+                  <SubmitButton />
                 </div>
               </div>
             </form>
